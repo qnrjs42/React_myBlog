@@ -20,3 +20,6 @@ nodemon: 파일 저장 시 서버 자동 재시작
 // 최신 문법을 쓰겠다고 설정
 package.json -> "dev": "nodemon ./server/server.js --exec babel-node"
 .babelrc -> "presets": ["@babel/preset-env"]
+
+.env 파일에서 몽고DB 설정 저장,
+server/config/index.js 파일에서 .env 불러와 모듈화
