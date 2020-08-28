@@ -8,6 +8,7 @@ import config from "./config";
 
 //Routers
 import postsRoutes from "./routes/api/post";
+import userRoutes from "./routes/api/user";
 
 const app = express();
 const { MONGO_URI } = config;
@@ -33,5 +34,6 @@ mongoose
 // Use Routes
 app.get("/");
 app.use("/api/post", postsRoutes); // 해당 경로의 router.post('/')으로 이동
+app.use("/api/user", userRoutes);
 
 export default app;
