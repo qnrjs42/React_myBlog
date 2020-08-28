@@ -23,3 +23,12 @@ package.json -> "dev": "nodemon ./server/server.js --exec babel-node"
 
 .env 파일에서 몽고DB 설정 저장,
 server/config/index.js 파일에서 .env 불러와 모듈화
+
+미들웨어 동작 방법
+POST: http://localhost:7000/api/post
+
+Headers
+KEY: Content VALUE: application/json,
+KEY: x-auth-token VALUE: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNDhhMmQ4ZjZhYzI4MGM3NDlmZWRjNCIsImlhdCI6MTU5ODU5NTgwMCwiZXhwIjoxNTk4NTk5NDAwfQ.\_rPuZ5PFkzAfH8zELgFCskEHJnuj5TNWFrPNcx3TpnY
+(토큰 복사하면 된다.)
+토근을 빼고 POST 전송 시 에러 메시지 출력
