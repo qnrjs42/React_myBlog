@@ -6,6 +6,9 @@ import cors from "cors";
 import morgan from "morgan";
 import config from "./config";
 
+//Routers
+import postsRoutes from "./routes/api/post";
+
 const app = express();
 const { MONGO_URI } = config;
 
@@ -22,11 +25,13 @@ mongoose
   .connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => console.log("MongoDB connecting Success!!"))
   .catch((e) => console.log(e));
 
 // Use Routes
 app.get("/");
+app.use("/api/post", postsRoutes); // 해당 경로의 router.post('/')으로 이동
 
 export default app;
