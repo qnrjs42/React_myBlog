@@ -43,6 +43,12 @@ KEY: x-auth-token VALUE: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNDhhMm
 
 토큰 값은 매번 로그인 할 때마다 달라짐
 
+"scripts": {
+"dev": "nodemon ./server/server.js --exec babel-node --ignore './client'"
+},
+
+--ignore './client' -> 클라이언트가 변경되어도 백엔드 서버 재시작 안 함
+
 ---
 
 - 프론트엔드
