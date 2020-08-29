@@ -59,3 +59,8 @@ serviceWorker.js
 setupTests.js
 
 ---
+
+.scss 파일은 .css 비해 변수를 사용할 수 있다.
+하지만 .css 파일로 반드시 변환시켜줘야 한다.
+
+npm i node-sass sass-loader
