@@ -42,3 +42,20 @@ KEY: x-auth-token VALUE: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNDhhMm
 (토큰 복사하면 된다.)
 
 토큰 값은 매번 로그인 할 때마다 달라짐
+
+---
+
+- 프론트엔드
+
+cd client
+npx create-react-app .
+
+------- 삭제 리스트 -------
+App.css
+App.test.js
+index.css
+logo.svg
+serviceWorker.js
+setupTests.js
+
+---
