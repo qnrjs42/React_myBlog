@@ -5,6 +5,9 @@ import {
   CLEAR_ERROR_REQUEST,
   CLEAR_ERROR_SUCCESS,
   CLEAR_ERROR_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE,
 } from "../types";
 
 // store에서 생성한 initialState 이름을 똑같이 매치 시켜야 한다
@@ -22,6 +25,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT_REQUEST:
     case LOGIN_REQUEST:
       return {
         ...state,
@@ -35,10 +39,11 @@ const authReducer = (state = initialState, action) => {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
-        userId: action.payload.userId,
+        userId: action.payload.user.id,
         userRole: action.payload.user.role,
         errorMsg: "",
       };
+    case LOGOUT_FAILURE:
     case LOGIN_FAILURE:
       localStorage.removeItem("token");
       return {
@@ -52,6 +57,19 @@ const authReducer = (state = initialState, action) => {
         userRole: null,
         errorMsg: action.payload.data.msg,
       };
+
+    case LOGOUT_SUCCESS:
+      localStorage.removeItem("token");
+      return {
+        token: null,
+        user: null,
+        userId: null,
+        isAuthenticated: true,
+        isLoading: false,
+        userRole: null,
+        errorMsg: "",
+      };
+
     case CLEAR_ERROR_REQUEST:
       return {
         ...state,
