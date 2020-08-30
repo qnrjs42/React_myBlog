@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CLEAR_ERROR_REQUEST } from "../../redux/types";
 import {
   NavLink,
@@ -12,6 +12,8 @@ import {
   Form,
   FormGroup,
 } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { REGISTER_REQUEST } from "../../redux/types";
 
 const RegisterModal = () => {
   const [modal, setModal] = useState(false);
@@ -21,7 +23,7 @@ const RegisterModal = () => {
     password: "",
   });
   const [localMsg, setLocalMsg] = useState("");
-  const { errorMsg } = (useSelector = (state) => state.auth);
+  const { errorMsg } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const handleToggle = () => {
