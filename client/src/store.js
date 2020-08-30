@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
 
 import createRootReducer from "./redux/reducers/index";
-import rootSaga from "./redux/sagas/index";
+import rootSaga from "./redux/sagas";
 
 export const history = createBrowserHistory();
 
@@ -15,7 +15,7 @@ const initialState = {};
 
 // 나중에 미들웨어 추가 시, 배열 안에 하나씩 추가하면 된다.
 const middlewares = [sagaMiddleware, routerMiddleware(history)];
-const devtools = window.__REDUX_DEVTOOLS_EXTENSION_COMPSE__;
+const devtools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
 // 배포환경에서 redux_devtools가 안 보이게 설정
 const composeEnhancer =
