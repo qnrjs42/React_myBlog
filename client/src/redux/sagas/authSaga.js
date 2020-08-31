@@ -10,6 +10,12 @@ import {
   USER_LOADING_SUCCESS,
   USER_LOADING_FAILURE,
   USER_LOADING_REQUEST,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE,
+  REGISTER_REQUEST,
+  CLEAR_ERROR_SUCCESS,
+  CLEAR_ERROR_FAILURE,
+  CLEAR_ERROR_REQUEST,
 } from "../types";
 
 // 로그인
@@ -61,6 +67,48 @@ function* watchLogout() {
   yield takeEvery(LOGOUT_REQUEST, logout);
 }
 
+// 회원가입
+const registerUserAPI = (req) => {
+  console.log("req", req);
+
+  return axios.post("api/user", req);
+};
+
+function* registerUser(action) {
+  try {
+    const result = yield call(registerUserAPI, action.payload);
+    console.log("RegisterUser Data", result);
+    yield put({
+      type: REGISTER_SUCCESS,
+      payload: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: REGISTER_FAILURE,
+      payload: err.response,
+    });
+  }
+}
+function* watchRegisterUser() {
+  yield takeEvery(REGISTER_REQUEST, registerUser);
+}
+
+// 에러 클리어
+function* clearError() {
+  try {
+    yield put({
+      type: CLEAR_ERROR_SUCCESS,
+    });
+  } catch (err) {
+    yield put({
+      type: CLEAR_ERROR_FAILURE,
+    });
+  }
+}
+function* watchClearError() {
+  yield takeEvery(CLEAR_ERROR_REQUEST, clearError);
+}
+
 // 유저 로딩
 const userLoadingAPI = (token) => {
   console.log(token);
@@ -98,5 +146,11 @@ function* watchUserLoading() {
 }
 
 export default function* authSaga() {
-  yield all([fork(watchLoginUser), fork(watchLogout), fork(watchUserLoading)]);
+  yield all([
+    fork(watchLoginUser),
+    fork(watchLogout),
+    fork(watchRegisterUser),
+    fork(watchClearError),
+    fork(watchUserLoading),
+  ]);
 }
