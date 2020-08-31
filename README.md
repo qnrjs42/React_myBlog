@@ -73,6 +73,7 @@ npm i node-sass sass-loader
 
 CKEditor5 Setting
 https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/react.html
+https://www.ssaple.net/posts/5ef0b5c69e4ac10611c45a57
 
 > 해당 명령 실행 시 되돌릴 수 없으니 git으로 먼저 업데이트
 > cd client
@@ -149,5 +150,7 @@ exclude: [
     /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
 /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css\$/
 ],
+
+client/src/components/editor/EditorConfig.js
 
 ---
