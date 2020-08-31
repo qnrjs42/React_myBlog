@@ -7,6 +7,9 @@ import {
   LOGOUT_FAILURE,
   LOGOUT_SUCCESS,
   LOGOUT_REQUEST,
+  USER_LOADING_SUCCESS,
+  USER_LOADING_FAILURE,
+  USER_LOADING_REQUEST,
 } from "../types";
 
 // 로그인
@@ -42,7 +45,6 @@ function* watchLoginUser() {
 }
 
 // 로그아웃
-
 function* logout(action) {
   try {
     yield put({
@@ -55,10 +57,46 @@ function* logout(action) {
     console.error(err);
   }
 }
-function* watchlogout() {
+function* watchLogout() {
   yield takeEvery(LOGOUT_REQUEST, logout);
 }
 
+// 유저 로딩
+const userLoadingAPI = (token) => {
+  console.log(token);
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers["x-auth-token"] = token;
+  }
+
+  return axios.get("api/auth/user", config);
+};
+
+function* userLoading(action) {
+  try {
+    console.log("action: ", action);
+    const result = yield call(userLoadingAPI, action);
+    yield put({
+      type: USER_LOADING_SUCCESS,
+      payload: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: USER_LOADING_FAILURE,
+      payload: err.response,
+    });
+  }
+}
+function* watchUserLoading() {
+  yield takeEvery(USER_LOADING_REQUEST, userLoading);
+}
+
 export default function* authSaga() {
-  yield all([fork(watchLoginUser), fork(watchlogout)]);
+  yield all([fork(watchLoginUser), fork(watchLogout), fork(watchUserLoading)]);
 }
