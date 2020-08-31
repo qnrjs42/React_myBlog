@@ -70,3 +70,84 @@ setupTests.js
 하지만 .css 파일로 반드시 변환시켜줘야 한다.
 
 npm i node-sass sass-loader
+
+CKEditor5 Setting
+https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/react.html
+
+> 해당 명령 실행 시 되돌릴 수 없으니 git으로 먼저 업데이트
+> cd client
+
+npm run eject
+
+npm i @babel/plugin-transform-react-jsx @babel/plugin-transform-react-jsx-self
+
+npm i raw-loader@3 @ckeditor/ckeditor5-dev-utils @ckeditor/ckeditor5-theme-lark @ckeditor/ckeditor5-react @ckeditor/ckeditor5-editor-classic @ckeditor/ckeditor5-essentials @ckeditor/ckeditor5-paragraph @ckeditor/ckeditor5-basic-styles
+
+npm remove style-loader
+
+npm i style-loader
+
+## config/webpack.config.js - 파일 수정
+
+// CKEitor5 Setting
+const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+const CKEditorWEbpackPlugin = require("@ckeditor/ckeditor5-dev-webpack-plugin");
+
+( inputSourceMap: shouldUseSourceMap 검색[Ctrl + F] -> 중괄호 2개 밖에다가 입력)
+
+// CKEitor5 Setting
+{
+test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+    use: [ 'raw-loader' ]
+},
+{
+    test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+use: [
+{
+loader: 'style-loader',
+options: {
+injectType: 'singletonStyleTag',
+attributes: {
+'data-cke': true
+}
+}
+},
+{
+loader: 'postcss-loader',
+options: styles.getPostCssConfig( {
+themeImporter: {
+themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+},
+minify: true
+} )
+}
+]
+},
+
+( 그 아래 줄 보면 test: cssRegex 아래에 코드 입력)
+test: cssRegex,
+// CKEditor5 Setting
+exclude: [
+cssModuleRegex,
+/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css\$/,
+],
+
+( 위 코드 복사하고 다음 줄에 있는 exclude: cssModuleRegex, 제거, 복사한 코드에서 제거하는거 아님)
+
+( 위 코드 입력하고 좀만 내려가서 아래 코드 복사)
+test: cssModuleRegex,
+// CKEditor5 Setting
+exclude: [/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css\$/],
+
+( 위 코드 복사하고 좀 더 내려가면 loader: require.resolve("file-loader"), 밑에 코드 붙여넣기, exclude 코드 대체)
+
+// CKEditor5 Setting
+exclude: [
+/\.(js|mjs|jsx|ts|tsx)$/,
+    /\.html$/,
+/\.json$/,
+    /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css\$/
+],
+
+---
