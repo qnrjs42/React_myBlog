@@ -23,6 +23,7 @@ export default function (state = initialState, action) {
     case POSTS_LOADING_REQUEST:
       return {
         ...state,
+        posts: [], // 새로고침할 때 posts 날려준다
         loading: true,
       };
     case POSTS_LOADING_SUCCESS:
