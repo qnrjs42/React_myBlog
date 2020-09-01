@@ -102,10 +102,23 @@ router.post("/", auth, uploadS3.none(), async (req, res, next) => {
     }
 
     return res.redirect(`/api/post/${newPost._id}`);
-
-    res.json(newPost);
   } catch (err) {
     console.error(err);
+  }
+});
+
+// @route   POST api/post/:id
+// @desc    Detail  Post
+// @access  Public
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const post = await (await Post.findById(req.params.id))
+      .populate("creator", "name")
+      .populate({ path: category, select: "categoryName" });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
