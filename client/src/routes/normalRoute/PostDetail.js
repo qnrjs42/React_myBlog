@@ -6,9 +6,9 @@ import {
   POST_DELETE_REQUEST,
   USER_LOADING_REQUEST,
 } from "../../redux/types";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
-import CKEditor from "from@ckeditor/ckeditor5-react";
+import CKEditor from "@ckeditor/ckeditor5-react";
 
 const PostDetail = (req) => {
   const dispatch = useDispatch();

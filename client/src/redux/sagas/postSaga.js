@@ -5,6 +5,9 @@ import {
   POSTS_UPLOADING_SUCCESS,
   POSTS_UPLOADING_FAILURE,
   POSTS_UPLOADING_REQUEST,
+  POST_DETAIL_LOADING_REQUEST,
+  POST_DETAIL_LOADING_FAILURE,
+  POST_DETAIL_LOADING_SUCCESS,
 } from "../types";
 import { call, put, takeEvery, all, fork } from "redux-saga/effects";
 import { push } from "connected-react-router";
@@ -69,7 +72,7 @@ function* uploadPosts(action) {
       type: POSTS_UPLOADING_FAILURE,
       payload: err,
     });
-    yield push("/");
+    yield put(push("/"));
   }
 }
 
@@ -77,6 +80,40 @@ function* watchUploadPosts() {
   yield takeEvery(POSTS_UPLOADING_REQUEST, uploadPosts);
 }
 
+// 업로드
+const loadPostDetailAPI = (payload) => {
+  console.log("loadPostDetailAPI payload: ", payload);
+  return axios.get(`/api/post/${payload}`);
+};
+
+function* loadPostDetail(action) {
+  try {
+    const result = yield call(loadPostDetailAPI, action.payload);
+    console.log("post_detail_saga_data", result);
+
+    yield put({
+      type: POST_DETAIL_LOADING_SUCCESS,
+      payload: result.data,
+    });
+
+    yield put(push(`/post/${result.data._id}`));
+  } catch (err) {
+    yield put({
+      type: POST_DETAIL_LOADING_FAILURE,
+      payload: err,
+    });
+    yield put(push("/"));
+  }
+}
+
+function* watchLoadPostDetail() {
+  yield takeEvery(POST_DETAIL_LOADING_REQUEST, loadPostDetail);
+}
+
 export default function* postSaga() {
-  yield all(fork(watchLoadPosts), [fork(watchUploadPosts)]);
+  yield all([
+    fork(watchLoadPosts),
+    fork(watchUploadPosts),
+    fork(watchLoadPostDetail),
+  ]);
 }
