@@ -80,6 +80,8 @@ const PostDetail = (req) => {
     </>
   );
 
+  console.log(title);
+
   return (
     <>
       <h1>PostDetail</h1>

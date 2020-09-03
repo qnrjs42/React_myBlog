@@ -3,16 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   Form,
   FormGroup,
+  Label,
+  Input,
   Button,
   Col,
   Progress,
-  Label,
-  Input,
 } from "reactstrap";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import { editorConfiguration } from "../../components/editor/EditorConfig";
-import MyInit from "../../components/editor/UploadAdapter";
+import Myinit from "../../components/editor/UploadAdapter";
+import { POST_UPLOADING_REQUEST } from "../../redux/types";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -21,6 +23,18 @@ const PostWrite = () => {
   const [form, setValues] = useState({ title: "", contents: "", fileUrl: "" });
   const dispatch = useDispatch();
 
+  const onSubmit = async (e) => {
+    await e.preventDefault();
+
+    const { title, contents, fileUrl, category } = form;
+    const token = localStorage.getItem("token");
+    const body = { title, contents, fileUrl, category, token };
+    dispatch({
+      type: POST_UPLOADING_REQUEST,
+      payload: body,
+    });
+  };
+
   const onChange = (e) => {
     setValues({
       ...form,
@@ -28,19 +42,13 @@ const PostWrite = () => {
     });
   };
 
-  const onSubmit = async (e) => {
-    await e.preventDefault();
-
-    const { title, contents, fileUrl, category } = form;
-  };
-
   const getDataFromCKEditor = (event, editor) => {
     const data = editor.getData();
     console.log(data);
+
     if (data && data.match("<img src=")) {
       const whereImg_start = data.indexOf("<img src=");
       console.log(whereImg_start);
-
       let whereImg_end = "";
       let ext_name_find = "";
       let result_Img_Url = "";
@@ -73,16 +81,15 @@ const PostWrite = () => {
       setValues({
         ...form,
         fileUrl: process.env.REACT_APP_BASIC_IMAGE_URL,
-        // fileUrl: "https://source.unsplash.com/random/301x201",
         contents: data,
       });
     }
   };
 
   return (
-    <>
+    <div>
       {isAuthenticated ? (
-        <Form>
+        <Form onSubmit={onSubmit}>
           <FormGroup className="mb-3">
             <Label for="title">Title</Label>
             <Input
@@ -105,13 +112,10 @@ const PostWrite = () => {
           </FormGroup>
           <FormGroup className="mb-3">
             <Label for="content">Content</Label>
-            {/* onChange가 아니라 onBlur인 이유는
-              onChange는 한 문자 바뀔 때마다 함수 호출하고 리렌더링되어 성능 저하될 염려가 있기 때문
-            */}
             <CKEditor
               editor={ClassicEditor}
               config={editorConfiguration}
-              onInit={MyInit}
+              onInit={Myinit}
               onBlur={getDataFromCKEditor}
             />
             <Button
@@ -128,7 +132,7 @@ const PostWrite = () => {
           <Progress animated color="info" value={100} />
         </Col>
       )}
-    </>
+    </div>
   );
 };
 

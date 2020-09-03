@@ -2,9 +2,9 @@ import {
   POSTS_LOADING_FAILURE,
   POSTS_LOADING_SUCCESS,
   POSTS_LOADING_REQUEST,
-  POSTS_UPLOADING_SUCCESS,
-  POSTS_UPLOADING_FAILURE,
-  POSTS_UPLOADING_REQUEST,
+  POST_UPLOADING_SUCCESS,
+  POST_UPLOADING_FAILURE,
+  POST_UPLOADING_REQUEST,
   POST_DETAIL_LOADING_REQUEST,
   POST_DETAIL_LOADING_FAILURE,
   POST_DETAIL_LOADING_SUCCESS,
@@ -43,6 +43,7 @@ function* watchLoadPosts() {
 
 // 업로드
 const uploadPostAPI = (payload) => {
+  console.log("uploadPostAPI");
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -62,14 +63,14 @@ function* uploadPosts(action) {
     const result = yield call(uploadPostAPI, action.payload);
     console.log("uploadPostaAPI, action.payload", result);
     yield put({
-      type: POSTS_UPLOADING_SUCCESS,
+      type: POST_UPLOADING_SUCCESS,
       payload: result.data,
     });
 
     yield put(push(`/post/${result.data._id}`));
   } catch (err) {
     yield put({
-      type: POSTS_UPLOADING_FAILURE,
+      type: POST_UPLOADING_FAILURE,
       payload: err,
     });
     yield put(push("/"));
@@ -77,7 +78,7 @@ function* uploadPosts(action) {
 }
 
 function* watchUploadPosts() {
-  yield takeEvery(POSTS_UPLOADING_REQUEST, uploadPosts);
+  yield takeEvery(POST_UPLOADING_REQUEST, uploadPosts);
 }
 
 // 업로드
