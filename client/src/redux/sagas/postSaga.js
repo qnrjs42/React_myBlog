@@ -43,7 +43,6 @@ function* watchLoadPosts() {
 
 // 업로드
 const uploadPostAPI = (payload) => {
-  console.log("uploadPostAPI");
   const config = {
     headers: {
       "Content-Type": "application/json",
