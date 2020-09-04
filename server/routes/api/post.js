@@ -115,7 +115,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const post = await (await Post.findById(req.params.id))
       .populate("creator", "name")
-      .populate({ path: category, select: "categoryName" });
+      .populate({ path: "category", select: "categoryName" });
   } catch (err) {
     console.error(err);
     next(err);
