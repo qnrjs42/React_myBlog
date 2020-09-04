@@ -109,11 +109,38 @@ const PostDetail = (req) => {
           }
         })()}
       </Row>
+      {postDetail && postDetail.comments ? (
+        <>
+          <div className="d-flex justify-content-end align-items-baseline small">
+            <FontAwesomeIcon icon={faPencilAlt} />
+            &nbsp;
+            <span>{postDetail.date}</span>
+            &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faCommentDots} />
+            &nbsp;
+            <span>{postDetail.comments.length}</span>
+            &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faMouse} />
+            <span>{postDetail.views}</span>
+          </div>
+
+          <Row className="mb-3">
+            <CKEditor editor={BalloonEditor} />
+          </Row>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
   return (
     <div>
-      <Helmet title={`Post | ${title}`} />
+      <Helmet
+        title={`Post | ${title}`}
+        data={postDetail.contents}
+        config={editorConfiguration}
+        disabled="true"
+      />
       {loading === true ? GrowingSpinner : Body}
     </div>
   );
