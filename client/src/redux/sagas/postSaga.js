@@ -11,6 +11,12 @@ import {
   POST_DELETE_FAILURE,
   POST_DELETE_REQUEST,
   POST_DELETE_SUCCESS,
+  POST_EDIT_LOADING_SUCCESS,
+  POST_EDIT_LOADING_FAILURE,
+  POST_EDIT_LOADING_REQUEST,
+  POST_EDIT_UPLOADING_SUCCESS,
+  POST_EDIT_UPLOADING_FAILURE,
+  POST_EDIT_UPLOADING_REQUEST,
 } from "../types";
 import { call, put, takeEvery, all, fork } from "redux-saga/effects";
 import { push } from "connected-react-router";
@@ -152,11 +158,85 @@ function* watchDeletePost() {
   yield takeEvery(POST_DELETE_REQUEST, DeletePost);
 }
 
+// 글 수정
+const PostEditLoadAPI = (payload) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const token = payload.token;
+
+  if (token) {
+    config.headers["x-auth-token"] = token;
+  }
+
+  return axios.get(`/api/post/${payload.id}/edit`, config);
+};
+
+function* PostEditLoad(action) {
+  try {
+    const result = yield call(PostEditLoadAPI, action.payload);
+    yield put({
+      type: POST_EDIT_LOADING_SUCCESS,
+      payload: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: POST_EDIT_LOADING_FAILURE,
+      payload: err,
+    });
+    yield put(push("/"));
+  }
+}
+
+function* watchPostEditLoad() {
+  yield takeEvery(POST_EDIT_LOADING_REQUEST, PostEditLoad);
+}
+
+// 글 수정 업로드
+const PostEditUpLoadAPI = (payload) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const token = payload.token;
+
+  if (token) {
+    config.headers["x-auth-token"] = token;
+  }
+
+  return axios.post(`/api/post/${payload.id}/edit`, payload, config);
+};
+
+function* PostEditUpLoad(action) {
+  try {
+    const result = yield call(PostEditUpLoadAPI, action.payload);
+    yield put({
+      type: POST_EDIT_UPLOADING_SUCCESS,
+      payload: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: POST_EDIT_UPLOADING_FAILURE,
+      payload: err,
+    });
+    yield put(push("/"));
+  }
+}
+
+function* watchPostEditUpLoad() {
+  yield takeEvery(POST_EDIT_UPLOADING_REQUEST, PostEditUpLoad);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
     fork(watchUploadPosts),
     fork(watchLoadPostDetail),
     fork(watchDeletePost),
+    fork(watchPostEditLoad),
+    fork(watchPostEditUpLoad),
   ]);
 }

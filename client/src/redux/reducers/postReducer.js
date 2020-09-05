@@ -11,6 +11,12 @@ import {
   POST_UPLOADING_REQUEST,
   POST_UPLOADING_SUCCESS,
   POST_UPLOADING_FAILURE,
+  POST_EDIT_LOADING_REQUEST,
+  POST_EDIT_LOADING_SUCCESS,
+  POST_EDIT_LOADING_FAILURE,
+  POST_EDIT_UPLOADING_REQUEST,
+  POST_EDIT_UPLOADING_SUCCESS,
+  POST_EDIT_UPLOADING_FAILURE,
 } from "../types";
 
 const initialState = {
@@ -102,6 +108,44 @@ export default function (state = initialState, action) {
         title: action.payload.title,
       };
     case POST_DETAIL_LOADING_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+
+    case POST_EDIT_LOADING_REQUEST:
+      return {
+        ...state,
+        posts: [], // 새로고침할 때 posts 날려준다
+        loading: true,
+      };
+    case POST_EDIT_LOADING_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        postDetail: action.payload,
+      };
+    case POST_EDIT_LOADING_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+
+    case POST_EDIT_UPLOADING_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case POST_EDIT_UPLOADING_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: true,
+        posts: action.payload,
+      };
+    case POST_EDIT_UPLOADING_FAILURE:
       return {
         ...state,
         error: action.payload,

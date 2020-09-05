@@ -210,7 +210,7 @@ router.delete("/:id", auth, async (req, res) => {
 // @route   GET api/post/:id/edit
 // @desc    Edit Post
 // @access  Private
-router.get("/:id/edit", async (req, res, next) => {
+router.get("/:id/edit", auth, async (req, res, next) => {
   try {
     const post = await (await Post.findById(req.params.id)).populate(
       "creator",
@@ -222,7 +222,7 @@ router.get("/:id/edit", async (req, res, next) => {
   }
 });
 
-router.post("/:id/edit", async (req, res, next) => {
+router.post("/:id/edit", auth, async (req, res, next) => {
   console.log(req, "api/post/:id/edit");
 
   const {
