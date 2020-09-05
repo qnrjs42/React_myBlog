@@ -3,6 +3,7 @@ import { call, put, takeEvery, all, fork } from "redux-saga/effects";
 import {
   COMMENT_LOADING_FAILURE,
   COMMENT_LOADING_SUCCESS,
+  COMMENT_LOADING_REQUEST,
   COMMENT_UPLOADING_SUCCESS,
   COMMENT_UPLOADING_FAILURE,
   COMMENT_UPLOADING_REQUEST,
@@ -26,13 +27,11 @@ function* loadComments(action) {
       payload: result.data,
     });
   } catch (err) {
-    console.error(err);
-
+    console.log(err);
     yield put({
       type: COMMENT_LOADING_FAILURE,
       payload: err,
     });
-
     yield push("/");
   }
 }
@@ -46,7 +45,7 @@ function* watchLoadComments() {
 const uploadCommentsAPI = (payload) => {
   console.log("uploadCommentAPI ID", payload.id);
 
-  return axios.post(`/api/post/${payload.id}/comments`);
+  return axios.post(`/api/post/${payload.id}/comments`, payload);
 };
 
 function* uploadComments(action) {

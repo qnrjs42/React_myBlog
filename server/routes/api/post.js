@@ -140,11 +140,11 @@ router.get("/:id", async (req, res, next) => {
 
 router.get("/:id/comments", async (req, res) => {
   try {
-    const comment = await (await Post.findById(req.params.id)).populate({
+    const comment = await Post.findById(req.params.id).populate({
       path: "comments",
     });
     const result = comment.comments;
-    console.error("comment load ", result);
+    console.log(result, "comment load");
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -152,6 +152,7 @@ router.get("/:id/comments", async (req, res) => {
 });
 
 router.post("/:id/comments", async (req, res, next) => {
+  console.log(req, "comments");
   const newComment = await Comment.create({
     contents: req.body.contents,
     creator: req.body.userId,

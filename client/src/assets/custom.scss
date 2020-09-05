@@ -46,3 +46,8 @@ html {
   width: 100vw;
   overflow-x: hidden;
 }
+
+// textarea 사이즈 늘리고 줄이는거 없앰
+textarea {
+  resize: none;
+}

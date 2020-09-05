@@ -8,17 +8,16 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
-  USER_LOADING_REQUEST,
-  USER_LOADING_SUCCESS,
-  USER_LOADING_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
+  USER_LOADING_REQUEST,
+  USER_LOADING_SUCCESS,
+  USER_LOADING_FAILURE,
 } from "../types";
 
-// store에서 생성한 initialState 이름을 똑같이 매치 시켜야 한다
 const initialState = {
-  token: localStorage.getItem("token"), //백엔드에서 만들었던 토큰
+  token: localStorage.getItem("token"),
   isAuthenticated: null,
   isLoading: false,
   user: "",
@@ -27,13 +26,14 @@ const initialState = {
   userRole: "",
   errorMsg: "",
   successMsg: "",
+  previousMatchMsg: "",
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case REGISTER_REQUEST:
-    case LOGOUT_REQUEST:
     case LOGIN_REQUEST:
+    case LOGOUT_REQUEST:
       return {
         ...state,
         errorMsg: "",
@@ -41,7 +41,7 @@ const authReducer = (state = initialState, action) => {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token); // 백엔드에서 가져온 토큰을 로컬스토리지에 저장
+      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         ...action.payload,
@@ -51,9 +51,10 @@ const authReducer = (state = initialState, action) => {
         userRole: action.payload.user.role,
         errorMsg: "",
       };
+
     case REGISTER_FAILURE:
-    case LOGOUT_FAILURE:
     case LOGIN_FAILURE:
+    case LOGOUT_FAILURE:
       localStorage.removeItem("token");
       return {
         ...state,
@@ -61,38 +62,21 @@ const authReducer = (state = initialState, action) => {
         token: null,
         user: null,
         userId: null,
-        isAutneticated: false,
+        isAuthenticated: false,
         isLoading: false,
         userRole: null,
         errorMsg: action.payload.data.msg,
       };
-
     case LOGOUT_SUCCESS:
       localStorage.removeItem("token");
       return {
         token: null,
         user: null,
         userId: null,
-        isAuthenticated: true,
+        isAuthenticated: false,
         isLoading: false,
         userRole: null,
         errorMsg: "",
-      };
-
-    case CLEAR_ERROR_REQUEST:
-      return {
-        ...state,
-        errorMsg: null,
-      };
-    case CLEAR_ERROR_SUCCESS:
-      return {
-        ...state,
-        errorMsg: null,
-      };
-    case CLEAR_ERROR_FAILURE:
-      return {
-        ...state,
-        errorMsg: null,
       };
 
     case USER_LOADING_REQUEST:
@@ -117,6 +101,22 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: false,
         isLoading: false,
         userRole: "",
+      };
+    case CLEAR_ERROR_REQUEST:
+      return {
+        ...state,
+      };
+    case CLEAR_ERROR_SUCCESS:
+      return {
+        ...state,
+        errorMsg: "",
+        previousMatchMsg: "",
+      };
+    case CLEAR_ERROR_FAILURE:
+      return {
+        ...state,
+        errorMsg: "Clear Error Fail",
+        previousMatchMsg: "Clear Error Fail",
       };
 
     default:
