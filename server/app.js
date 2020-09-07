@@ -1,18 +1,22 @@
 import express from "express";
 import mongoose from "mongoose";
+import config from "./config";
 import hpp from "hpp";
 import helmet from "helmet";
 import cors from "cors";
-import morgan from "morgan";
-import config from "./config";
+import path from "path";
 
 //Routers
-import postsRoutes from "./routes/api/post";
+import postRoutes from "./routes/api/post";
 import userRoutes from "./routes/api/user";
 import authRoutes from "./routes/api/auth";
 
+import morgan from "morgan";
+
 const app = express();
 const { MONGO_URI } = config;
+
+const prod = process.env.NODE_ENV === "production";
 
 // 서버 보안 라이브러리
 app.use(hpp());
@@ -34,8 +38,7 @@ mongoose
   .catch((e) => console.log(e));
 
 // Use Routes
-app.get("/");
-app.use("/api/post", postsRoutes); // 해당 경로의 router.post('/')으로 이동
+app.use("/api/post", postRoutes); // 해당 경로의 router.post('/')으로 이동
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 

@@ -195,7 +195,7 @@ function* watchPostEditLoad() {
 }
 
 // 글 수정 업로드
-const PostEditUpLoadAPI = (payload) => {
+const PostEditUploadAPI = (payload) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -206,28 +206,28 @@ const PostEditUpLoadAPI = (payload) => {
   if (token) {
     config.headers["x-auth-token"] = token;
   }
-
+  console.log("payload, config: ", payload, config);
   return axios.post(`/api/post/${payload.id}/edit`, payload, config);
 };
 
-function* PostEditUpLoad(action) {
+function* PostEditUpload(action) {
   try {
-    const result = yield call(PostEditUpLoadAPI, action.payload);
+    const result = yield call(PostEditUploadAPI, action.payload);
     yield put({
       type: POST_EDIT_UPLOADING_SUCCESS,
       payload: result.data,
     });
+    yield put(push(`/post/${result.data._id}`));
   } catch (err) {
     yield put({
       type: POST_EDIT_UPLOADING_FAILURE,
       payload: err,
     });
-    yield put(push("/"));
   }
 }
 
-function* watchPostEditUpLoad() {
-  yield takeEvery(POST_EDIT_UPLOADING_REQUEST, PostEditUpLoad);
+function* watchPostEditUpload() {
+  yield takeEvery(POST_EDIT_UPLOADING_REQUEST, PostEditUpload);
 }
 
 export default function* postSaga() {
@@ -237,6 +237,6 @@ export default function* postSaga() {
     fork(watchLoadPostDetail),
     fork(watchDeletePost),
     fork(watchPostEditLoad),
-    fork(watchPostEditUpLoad),
+    fork(watchPostEditUpload),
   ]);
 }

@@ -212,19 +212,15 @@ router.delete("/:id", auth, async (req, res) => {
 // @access  Private
 router.get("/:id/edit", auth, async (req, res, next) => {
   try {
-    const post = await (await Post.findById(req.params.id)).populate(
-      "creator",
-      "name"
-    );
+    const post = await Post.findById(req.params.id).populate("creator", "name");
     res.json(post);
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    console.error(e);
   }
 });
 
 router.post("/:id/edit", auth, async (req, res, next) => {
   console.log(req, "api/post/:id/edit");
-
   const {
     body: { title, contents, fileUrl, id },
   } = req;
@@ -241,9 +237,9 @@ router.post("/:id/edit", auth, async (req, res, next) => {
       { new: true }
     );
     console.log(modified_post, "edit modified");
-    res.redirect(`/api/posts/${modified_post.id}`);
+    res.redirect(`/api/post/${modified_post.id}`);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     next(err);
   }
 });
